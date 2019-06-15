@@ -1,3 +1,6 @@
+-- CONSULTAS EXTRAÑAS QUE PODRIA LLEGAR A TOMAR
+
+
 SELECT *
 FROM Personas P
 JOIN Profesores Prof USING(dni)
