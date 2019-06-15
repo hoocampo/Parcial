@@ -1,3 +1,8 @@
+-- Punto 2.
+-- No pongo el tema de las fechas porque no esta claro en el enunciado en mi opinion.
+-- De todas formas bastaria con agregar un between donde haga falta.
+
+
 -- <------------FORMA 1--------------->
 DROP VIEW IF EXISTS VISTA1;
 CREATE VIEW VISTA1 AS
@@ -31,18 +36,18 @@ DROP VIEW IF EXISTS Vista2;
 CREATE VIEW Vista2 AS
 SELECT T.dni DNI, SUM(T.Tutor) Tutor, SUM(T.Cotutor) Cotutor, SUM(T.Jurado) Jurado
 FROM (SELECT R.dni, COUNT(*) Tutor, 0 Cotutor, 0 Jurado
-FROM RolesEnTrabajos R
-WHERE R.rol='Tutor'
-GROUP BY R.dni, R.rol
+	FROM RolesEnTrabajos R
+	WHERE R.rol='Tutor'
+	GROUP BY R.dni, R.rol
 UNION
-SELECT R.dni dni, 0 Tutor, COUNT(*) Cotutor, 0 Jurado
-FROM RolesEnTrabajos R
-WHERE R.rol='Cotutor'
-GROUP BY R.dni, R.rol
+	SELECT R.dni dni, 0 Tutor, COUNT(*) Cotutor, 0 Jurado
+	FROM RolesEnTrabajos R
+	WHERE R.rol='Cotutor'
+	GROUP BY R.dni, R.rol
 UNION
-SELECT R.dni, 0 Tutor, 0 Cotutor, COUNT(*) Jurado
-FROM RolesEnTrabajos R
-WHERE R.rol='Jurado'
+	SELECT R.dni, 0 Tutor, 0 Cotutor, COUNT(*) Jurado
+	FROM RolesEnTrabajos R
+	WHERE R.rol='Jurado'
 GROUP BY R.dni, R.rol) T
 GROUP BY T.dni;
 
