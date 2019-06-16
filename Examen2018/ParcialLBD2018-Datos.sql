@@ -1,4 +1,4 @@
-USE ExamenLBD2018;
+USE ParcialLBD2018;
 
 -- delete from RolesEnTrabajos;
 -- delete from AlumnosEnTrabajos;
