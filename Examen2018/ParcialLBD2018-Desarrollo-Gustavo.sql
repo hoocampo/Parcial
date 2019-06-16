@@ -1,4 +1,4 @@
--- Punto 2
+-- Punto 2 Completo by Gus
 DROP PROCEDURE IF EXISTS DetalleRoles;
 
 DELIMITER //
@@ -10,7 +10,10 @@ SALIR: BEGIN
       LEAVE SALIR;
     ELSE
 		  -- Año,DNI, Apellidos, Nombres, Tutor, Cotutor y Jurado
-      SELECT YEAR(RolesEnTrabajos.desde), Personas.apellidos, Personas.nombres,count(*) as 'Total', count( IF(rolesentrabajos.rol='Jurado',1, NULL)) as 'Jurado', count( IF(rolesentrabajos.rol='Tutor',1, NULL)) as 'Tutor',count( IF(rolesentrabajos.rol='Cotutor',1, NULL)) as 'Cotutor'
+      SELECT YEAR(RolesEnTrabajos.desde), Personas.apellidos, Personas.nombres,count(*) as 'Total',
+		count( IF(RolesEnTrabajos.rol='Jurado',1, NULL)) as 'Jurado',
+        count( IF(RolesEnTrabajos.rol='Tutor',1, NULL)) as 'Tutor',
+        count( IF(RolesEnTrabajos.rol='Cotutor',1, NULL)) as 'Cotutor'
       FROM RolesEnTrabajos
       JOIN Profesores ON RolesEnTrabajos.dni = Profesores.dni
       JOIN Personas ON Personas.dni = Profesores.dni
@@ -21,11 +24,11 @@ SALIR: BEGIN
 END //
 DELIMITER ;
 
-CALL DetalleRoles('2015-01-01','2017-12-31', @resultado);
+CALL DetalleRoles('1995-01-01','2019-12-31', @resultado);
 SELECT @resultado;
 
 -- consulta de control
-SELECT YEAR(RolesEnTrabajos.desde), Personas.apellidos, Personas.nombres, rolesentrabajos.rol
+SELECT YEAR(RolesEnTrabajos.desde), Personas.apellidos, Personas.nombres, RolesEnTrabajos.rol
       FROM RolesEnTrabajos
       JOIN Profesores ON RolesEnTrabajos.dni = Profesores.dni
       JOIN Personas ON Personas.dni = Profesores.dni
