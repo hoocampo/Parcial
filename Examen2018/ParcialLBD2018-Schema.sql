@@ -28,7 +28,8 @@ DROP TABLE IF EXISTS Cargos;
 CREATE TABLE IF NOT EXISTS Cargos (
 	idCargo INT NOT NULL,
     cargo VARCHAR(20) NOT NULL,
-    PRIMARY KEY(idCargo)
+    PRIMARY KEY(idCargo),
+    UNIQUE INDEX idx_cargo(cargo)
 ) ENGINE=INNODB;
 
 DROP TABLE IF EXISTS Profesores;
