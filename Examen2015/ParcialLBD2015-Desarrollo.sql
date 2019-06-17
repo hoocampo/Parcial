@@ -26,6 +26,32 @@ DELIMITER ;
 CALL sp_movimientos('2009-04-01','2009-01-31', @resultado);
 SELECT @resultado;
 
+-- Punto extra. Mostrar las expensas con subtotales parciales por por mes, por edificio, por piso y por numero
+DROP PROCEDURE IF EXISTS sp_movimientos;
+DELIMITER //
+CREATE PROCEDURE sp_movimientos(fechaInicio DATE, fechaFin DATE, OUT mensaje VARCHAR(100))
+SALIR: BEGIN
+    IF (fechaInicio > fechaFin) OR (YEAR(fechaInicio)<>YEAR(fechaFin)) THEN
+      SET mensaje = 'Error en los datos ingresados';
+      LEAVE SALIR;
+    ELSE
+		SELECT T.mes, E.nombre, E.domicilio, T.piso, T.numero, T.Total
+		FROM(SELECT MONTH(periodo) mes,
+			IF(GROUPING(idEdificio)=1, 'Total por Edificio', idEdificio) idEdificio,
+			IF(GROUPING(piso)=1, 'Total por Pisos', piso) piso,
+			IF(GROUPING(numero)=1, 'Total por Numeros', numero) numero,
+			SUM(importe) Total
+            FROM Expensas 
+			WHERE periodo BETWEEN fechaInicio AND fechaFin
+			GROUP BY mes, idEdificio, piso, numero WITH ROLLUP) T
+		JOIN Edificios E USING(idEdificio);
+	END IF;
+END //
+DELIMITER ;
+
+CALL sp_movimientos('2009-01-01','2009-12-31', @resultado);
+SELECT @resultado;
+
 -- Punto 3
 DROP VIEW IF EXISTS vista_unidades;
 CREATE VIEW vista_unidades AS
@@ -36,4 +62,3 @@ JOIN Propietarios P USING(idPropietario)
 ORDER BY E.nombre, U.piso, U.numero;
 
 SELECT * FROM vista_unidades;
-
